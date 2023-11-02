@@ -112,6 +112,7 @@ export default function* loadPrivatePartialConfig(
   const merged: ValidatedOptions = {
     assumptions: {},
   };
+  // merge  options 
   configChain.options.forEach(opts => {
     mergeOptions(merged as any, opts);
   });

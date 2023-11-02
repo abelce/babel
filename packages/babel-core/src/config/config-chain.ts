@@ -161,7 +161,9 @@ export function* buildRootChain(
   const programmaticReport = yield* programmaticLogger.output();
 
   let configFile;
+  // 是否指定 configFile
   if (typeof opts.configFile === "string") {
+    // 指定了就去加载
     configFile = yield* loadConfig(
       opts.configFile,
       context.cwd,

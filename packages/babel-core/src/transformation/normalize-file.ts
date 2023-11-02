@@ -46,11 +46,13 @@ export default function* normalizeFile(
       ast = cloneDeep(ast);
     }
   } else {
+    // 解析ast
     // @ts-expect-error todo: use babel-types ast typings in Babel parser
     ast = yield* parser(pluginPasses, options, code);
   }
 
   let inputMap = null;
+  // 是否需要sourceMap
   if (options.inputSourceMap !== false) {
     // If an explicit object is passed in, it overrides the processing of
     // source maps that may be in the file itself.

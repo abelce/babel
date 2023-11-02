@@ -92,6 +92,7 @@ export async function compile(filename: string, opts: InputOptions) {
   const result = process.env.BABEL_8_BREAKING
     ? await babel.transformFileAsync(filename, opts)
     : await new Promise<FileResult>((resolve, reject) => {
+      // babel/core中的方法进行编译
         babel.transformFile(filename, opts, (err, result) => {
           if (err) reject(err);
           else resolve(result);

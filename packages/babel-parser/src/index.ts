@@ -102,6 +102,7 @@ function getParser(options: Options | undefined | null, input: string): Parser {
 const parserClassCache: { [key: string]: { new (...args: any): Parser } } = {};
 
 /** Get a Parser class with plugins applied. */
+// 初始化plugin
 function getParserClass(pluginsFromOptions: PluginList): {
   new (...args: any): Parser;
 } {

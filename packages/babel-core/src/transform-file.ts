@@ -20,10 +20,12 @@ const transformFileRunner = gensync(function* (
 ): Handler<FileResult | null> {
   const options = { ...opts, filename };
 
+  // 加载options
   const config: ResolvedConfig | null = yield* loadConfig(options);
   if (config === null) return null;
-
+  // 读取文件
   const code = yield* fs.readFile(filename, "utf8");
+  // 开始解析
   return yield* run(config, code);
 });
 

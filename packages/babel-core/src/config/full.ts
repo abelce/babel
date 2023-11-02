@@ -154,7 +154,7 @@ export default gensync(function* loadFullConfig(
           if (!preset) return true;
 
           pass.push(...preset.plugins);
-
+          // 递归对preset的的presets进行处理
           const ignored = yield* recursePresetDescriptors(preset.presets, pass);
           if (ignored) return true;
 
@@ -169,13 +169,14 @@ export default gensync(function* loadFullConfig(
   if (ignored) return null;
 
   const opts: any = optionDefaults;
+  // 将得到的otions与默认值合并
   mergeOptions(opts, options);
 
   const pluginContext: Context.FullPlugin = {
     ...presetContext,
     assumptions: opts.assumptions ?? {},
   };
-
+// 处理plugin
   yield* enhanceError(context, function* loadPluginDescriptors() {
     pluginDescriptorsByPass[0].unshift(...initialPluginsDescriptors);
 

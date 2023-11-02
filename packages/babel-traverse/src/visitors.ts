@@ -38,7 +38,7 @@ export function isExplodedVisitor(
  * * `"Identifier|NumericLiteral": { ... }` -> `Identifier: { ... }, NumericLiteral: { ... }`
  * * Aliases in `@babel/types`: e.g. `Property: { ... }` -> `ObjectProperty: { ... }, ClassProperty: { ... }`
  * Other normalizations are:
- * * Visitors of virtual types are wrapped, so that they are only visited when
+ * *   of virtual types are wrapped, so that they are only visited when
  *   their dynamic check passes
  * * `enter` and `exit` functions are wrapped in arrays, to ease merging of
  *   visitors
@@ -52,6 +52,7 @@ export function explode<S>(visitor: Visitor<S>): ExplodedVisitor<S> {
   for (const nodeType of Object.keys(visitor) as (keyof Visitor)[]) {
     if (shouldIgnoreKey(nodeType)) continue;
 
+    // 处理包含|的nodeType
     const parts: Array<string> = nodeType.split("|");
     if (parts.length === 1) continue;
 

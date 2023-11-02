@@ -36,6 +36,7 @@ export function* run(
   code: string,
   ast?: t.File | t.Program | null,
 ): Handler<FileResult> {
+  // 包含ast的file
   const file = yield* normalizeFile(
     config.passes,
     normalizeOptions(config),
@@ -45,6 +46,7 @@ export function* run(
 
   const opts = file.opts;
   try {
+    // 转换file
     yield* transformFile(file, config.passes);
   } catch (e) {
     e.message = `${opts.filename ?? "unknown file"}: ${e.message}`;
@@ -57,6 +59,7 @@ export function* run(
   let outputCode, outputMap;
   try {
     if (opts.code !== false) {
+      // 通过ast生成code
       ({ outputCode, outputMap } = generateCode(config.passes, file));
     }
   } catch (e) {
@@ -113,11 +116,13 @@ function* transformFile(file: File, pluginPasses: PluginPasses): Handler<void> {
     }
 
     // merge all plugin visitors into a single visitor
+    // 合并所有plugin的visitor为一个vistor
     const visitor = traverse.visitors.merge(
       visitors,
       passes,
       file.opts.wrapPluginVisitorMethod,
     );
+    // 编译ast
     if (process.env.BABEL_8_BREAKING) {
       traverse(file.ast.program, visitor, file.scope, null, file.path, true);
     } else {

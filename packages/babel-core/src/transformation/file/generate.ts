@@ -23,6 +23,7 @@ export default function generateCode(
     for (const plugin of plugins) {
       const { generatorOverride } = plugin;
       if (generatorOverride) {
+        // 调用 generatorOverride
         const result = generatorOverride(ast, generatorOpts, code, generate);
 
         if (result !== undefined) results.push(result);
@@ -32,6 +33,7 @@ export default function generateCode(
 
   let result;
   if (results.length === 0) {
+    // 生成code
     result = generate(ast, generatorOpts, code);
   } else if (results.length === 1) {
     result = results[0];

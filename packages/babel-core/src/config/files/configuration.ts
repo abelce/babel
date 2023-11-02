@@ -284,6 +284,7 @@ function* loadOneConfig(
   );
   const config = configs.reduce((previousConfig: ConfigFile | null, config) => {
     if (config && previousConfig) {
+      // 配置文件只能存在一个，否则将报错
       throw new ConfigError(
         `Multiple configuration files found. Please remove one:\n` +
           ` - ${path.basename(previousConfig.filepath)}\n` +
