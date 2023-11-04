@@ -261,7 +261,9 @@ export function VariableDeclaration(
   }
 
   const { kind } = node;
+  // 添加const关键字
   this.word(kind, kind === "using" || kind === "await using");
+  // 添加空格
   this.space();
 
   let hasInits = false;
@@ -308,16 +310,16 @@ export function VariableDeclaration(
 
   this.semicolon();
 }
-
+// 变量的标识符
 export function VariableDeclarator(this: Printer, node: t.VariableDeclarator) {
-  this.print(node.id, node);
+  this.print(node.id, node); // 变量名称
   if (node.definite) this.token("!"); // TS
   // @ts-expect-error todo(flow-ts) Property 'typeAnnotation' does not exist on type 'MemberExpression'.
   this.print(node.id.typeAnnotation, node);
-  if (node.init) {
+  if (node.init) {  // 打印变量的值
     this.space();
     this.token("=");
     this.space();
-    this.print(node.init, node);
+    this.print(node.init, node); // 根据不同的数据类型，调用不同的方法， types.ts文件中定义
   }
 }

@@ -52,7 +52,7 @@ export function explode<S>(visitor: Visitor<S>): ExplodedVisitor<S> {
   for (const nodeType of Object.keys(visitor) as (keyof Visitor)[]) {
     if (shouldIgnoreKey(nodeType)) continue;
 
-    // 处理包含|的nodeType
+    // 处理包含|的nodeType，分割后分别设置
     const parts: Array<string> = nodeType.split("|");
     if (parts.length === 1) continue;
 

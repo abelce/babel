@@ -51,7 +51,7 @@ function traverse(
 function traverse<Options extends TraverseOptions>(
   parent: t.Node,
   // @ts-expect-error provide {} as default value for Options
-  opts: Options = {},
+  opts: Options = {}, // opts的key可以为，enter/exit，或者FunctionDeclaration 这样的Node.Type
   scope?: Scope,
   state?: any,
   parentPath?: NodePath,
@@ -76,9 +76,10 @@ function traverse<Options extends TraverseOptions>(
   if (!VISITOR_KEYS[parent.type]) {
     return;
   }
-
+  // 整理和校验visitor中的key/value
   visitors.explode(opts as Visitor);
 
+  // 遍历节点
   traverseNode(
     parent,
     opts as ExplodedVisitor,

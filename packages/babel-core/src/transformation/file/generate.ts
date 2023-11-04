@@ -23,7 +23,7 @@ export default function generateCode(
     for (const plugin of plugins) {
       const { generatorOverride } = plugin;
       if (generatorOverride) {
-        // 调用 generatorOverride
+        // 如果插件中有generatorOverride，就执行
         const result = generatorOverride(ast, generatorOpts, code, generate);
 
         if (result !== undefined) results.push(result);

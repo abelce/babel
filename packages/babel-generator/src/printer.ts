@@ -691,7 +691,7 @@ class Printer {
     this._printLeadingComments(node, parent);
 
     const loc = nodeType === "Program" || nodeType === "File" ? null : node.loc;
-
+    // 开发生成代码
     this.exactSource(loc, printMethod.bind(this, node, parent));
 
     if (shouldPrintParens) {
@@ -907,7 +907,7 @@ class Printer {
     opts.indent ??= false;
     this.printJoin(nodes, parent, opts);
   }
-
+  // 跟printSequence的区别是会设置separator
   printList(items: t.Node[], parent: t.Node, opts: PrintListOptions = {}) {
     if (opts.separator == null) {
       opts.separator = commaSeparator;

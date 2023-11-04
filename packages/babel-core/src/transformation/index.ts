@@ -46,7 +46,7 @@ export function* run(
 
   const opts = file.opts;
   try {
-    // 转换file
+    // 转换file ast
     yield* transformFile(file, config.passes);
   } catch (e) {
     e.message = `${opts.filename ?? "unknown file"}: ${e.message}`;
@@ -92,9 +92,10 @@ function* transformFile(file: File, pluginPasses: PluginPasses): Handler<void> {
 
       passPairs.push([plugin, pass]);
       passes.push(pass);
+      // 收集plugin的visitor
       visitors.push(plugin.visitor);
     }
-
+    // 执行plugin.pre
     for (const [plugin, pass] of passPairs) {
       const fn = plugin.pre;
       if (fn) {

@@ -31,7 +31,7 @@ export function _call(this: NodePath, fns?: Array<Function>): boolean {
 
     const node = this.node;
     if (!node) return true;
-
+    // 执行插件
     const ret = fn.call(this.state, this, this.state);
     if (ret && typeof ret === "object" && typeof ret.then === "function") {
       throw new Error(
@@ -91,13 +91,16 @@ export function visit(this: NodePath): boolean {
   // before calling the enter visitor, but it can be true in case of
   // a requeued node (e.g. by .replaceWith()) that is then marked
   // with .skip().
+  // 调用enter
   if (this.shouldSkip || this.call("enter")) {
     this.debug("Skip...");
     return this.shouldStop;
   }
+  // 重置context
   restoreContext(this, currentContext);
 
   this.debug("Recursing into...");
+  // 递归遍历node
   this.shouldStop = traverseNode(
     this.node,
     this.opts,
@@ -109,6 +112,7 @@ export function visit(this: NodePath): boolean {
 
   restoreContext(this, currentContext);
 
+  // 调用exit
   this.call("exit");
 
   return this.shouldStop;

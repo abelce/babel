@@ -198,7 +198,7 @@ export default abstract class StatementParser extends ExpressionParser {
     if (this.options.tokens) {
       file.tokens = babel7CompatTokens(this.tokens, this.input);
     }
-
+    // 结束File解析
     return this.finishNode(file, "File");
   }
 
@@ -221,6 +221,7 @@ export default abstract class StatementParser extends ExpressionParser {
       }
     }
     let finishedProgram: N.Program;
+    // 结束 Program 解析，然后返回到上一级的File节点
     if (end === tt.eof) {
       // finish at eof for top level program
       finishedProgram = this.finishNode(program, "Program");
@@ -1197,7 +1198,7 @@ export default abstract class StatementParser extends ExpressionParser {
     kind: "var" | "let" | "const" | "using" | "await using",
     allowMissingInitializer: boolean = false,
   ): N.VariableDeclaration {
-    this.next();
+    this.next(); // 解析 var后面的关键字，比如 `const a = 1;` 中的`a`
     this.parseVar(node, false, kind, allowMissingInitializer);
     this.semicolon();
     return this.finishNode(node, "VariableDeclaration");
@@ -1413,6 +1414,7 @@ export default abstract class StatementParser extends ExpressionParser {
         // clear strict errors since the strict mode will not change within the block
         this.state.strictErrors.clear();
       }
+      // stmt 推入到body中
       body.push(stmt);
     }
 
@@ -1532,8 +1534,8 @@ export default abstract class StatementParser extends ExpressionParser {
     node.kind = kind;
     for (;;) {
       const decl = this.startNode<N.VariableDeclarator>();
-      this.parseVarId(decl, kind);
-      decl.init = !this.eat(tt.eq)
+      this.parseVarId(decl, kind); // 设置标识符
+      decl.init = !this.eat(tt.eq) // 设置标识符的init， 获取标识符右边的值
         ? null
         : isFor
         ? this.parseMaybeAssignDisallowIn()
@@ -1569,7 +1571,7 @@ export default abstract class StatementParser extends ExpressionParser {
     decl: Undone<N.VariableDeclarator>,
     kind: "var" | "let" | "const" | "using" | "await using",
   ): void {
-    const id = this.parseBindingAtom();
+    const id = this.parseBindingAtom(); // 获取标识符
     this.checkLVal(id, {
       in: { type: "VariableDeclarator" },
       binding: kind === "var" ? BindingFlag.TYPE_VAR : BindingFlag.TYPE_LEXICAL,

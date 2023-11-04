@@ -26,7 +26,7 @@ export function traverseNode<S = unknown>(
   skipKeys?: Record<string, boolean>,
   visitSelf?: boolean,
 ): boolean {
-  const keys = VISITOR_KEYS[node.type];
+  const keys = VISITOR_KEYS[node.type]; // 获取不同节点不同的key
   if (!keys) return false;
 
   const context = new TraversalContext(scope, opts, state, path);
@@ -35,8 +35,10 @@ export function traverseNode<S = unknown>(
     return context.visitQueue([path]);
   }
 
+  // 这里循环处理node的key
   for (const key of keys) {
     if (skipKeys?.[key]) continue;
+    // 最开始的node为File节点
     if (context.visit(node, key)) {
       return true;
     }
