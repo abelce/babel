@@ -42,6 +42,7 @@ export default async function ({
     const dest = getDest(relative, base);
 
     try {
+      // 开始编译
       const res = await util.compile(src, {
         ...babelOptions,
         sourceFileName: slash(path.relative(dest + "/..", src)),

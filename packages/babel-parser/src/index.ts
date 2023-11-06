@@ -24,7 +24,7 @@ import {
 import type { Expression, File } from "./types.ts";
 
 export function parse(input: string, options?: Options): File {
-  if (options?.sourceType === "unambiguous") {
+  if (options?.sourceType === "unambiguous") { // 如果sourceType是不明确的
     options = {
       ...options,
     };
@@ -106,6 +106,9 @@ const parserClassCache: { [key: string]: { new (...args: any): Parser } } = {};
 function getParserClass(pluginsFromOptions: PluginList): {
   new (...args: any): Parser;
 } {
+  // 判断是否包含 "estree" | "jsx" | "flow" | "typescript" | "v8intrinsic" | "placeholders"等plugin
+  // 有的话就初始化对应的plugin的Parser，比如： jsx的parser为JSXParserMixin
+  // 同时放在parserClassCache中进行缓存
   const pluginList = mixinPluginNames.filter(name =>
     hasPlugin(pluginsFromOptions, name),
   );

@@ -59,7 +59,7 @@ export type PluginPasses = Array<PluginPassList>;
 export default gensync(function* loadFullConfig(
   inputOpts: unknown,
 ): Handler<ResolvedConfig | null> {
-  const result = yield* loadPrivatePartialConfig(inputOpts);
+  const result = yield* loadPrivatePartialConfig(inputOpts); // 加载配置
   if (!result) {
     return null;
   }
@@ -185,7 +185,7 @@ export default gensync(function* loadFullConfig(
       passes.push(pass);
 
       for (let i = 0; i < descs.length; i++) {
-        const descriptor = descs[i];
+        const descriptor = descs[i]; // plugin对应的descriptor
         if (descriptor.options !== false) {
           try {
             // eslint-disable-next-line no-var
@@ -197,7 +197,7 @@ export default gensync(function* loadFullConfig(
             }
             throw e;
           }
-          pass.push(plugin);
+          pass.push(plugin); // 将plugin推入pass中
 
           externalDependencies.push(plugin.externalDependencies);
         }

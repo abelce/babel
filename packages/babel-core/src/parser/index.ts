@@ -17,6 +17,7 @@ export default function* parser(
       for (const plugin of plugins) {
         const { parserOverride } = plugin;
         if (parserOverride) {
+          // 执行 parserOverride
           const ast = parserOverride(code, parserOpts, parse);
 
           if (ast !== undefined) results.push(ast);

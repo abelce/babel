@@ -38,11 +38,11 @@ export default class Parser extends StatementParser {
 
   parse(): N.File {
     this.enterInitialScopes();
-    const file = this.startNode() as N.File;
-    const program = this.startNode() as N.Program;
-    this.nextToken();
+    const file = this.startNode() as N.File;// 创建File节点
+    const program = this.startNode() as N.Program; // 创建Program，属于File的子节点
+    this.nextToken(); // 开始解析token， 感觉这一步属于尝试性的解析代码，如果代码解析不了就直接报错，成功了就作为parseTopLevel解析的基础
     file.errors = null;
-    this.parseTopLevel(file, program);
+    this.parseTopLevel(file, program); // 解析program的部分，以及program关联到file上
     file.errors = this.state.errors;
     return file;
   }

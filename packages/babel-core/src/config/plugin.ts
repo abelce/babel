@@ -10,7 +10,7 @@ export default class Plugin {
   visitor: PluginObject["visitor"];
 
   parserOverride?: Function;
-  generatorOverride?: Function;
+  generatorOverride?: Function; // generate时的覆盖函数
 
   options: {};
 

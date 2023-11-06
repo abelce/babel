@@ -66,7 +66,7 @@ class ConfigItem<API> {
    * The private underlying descriptor that Babel actually cares about.
    * If you access this, you are a bad person.
    */
-  _descriptor: UnloadedDescriptor<API>;
+  _descriptor: UnloadedDescriptor<API>; // 就是配置文件中引入的plugin/preset数据项
 
   // TODO(Babel 9): Check if this symbol needs to be updated
   /**

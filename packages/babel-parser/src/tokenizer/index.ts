@@ -222,7 +222,7 @@ export default abstract class Tokenizer extends CommentsParser {
   lookaheadInLineCharCode(): number {
     return this.input.charCodeAt(this.nextTokenInLineStart());
   }
-
+  // 获取pos位置的字符的ASCII码
   codePointAtPos(pos: number): number {
     // The implementation is based on
     // https://source.chromium.org/chromium/chromium/src/+/master:v8/src/builtins/builtins-string-gen.cc;l=1455;drc=221e331b49dfefadbc6fa40b0c68e6f97606d0b3;bpv=0;bpt=1
@@ -463,7 +463,7 @@ export default abstract class Tokenizer extends CommentsParser {
   // maintains `context` and `canStartJSXElement`, and skips the space after
   // the token, so that the next one's `start` will point at the
   // right position.
-
+  // 处理end、type、value等信息
   finishToken(type: TokenType, val?: any): void {
     this.state.end = this.state.pos;
     this.state.endLoc = this.state.curPosition();
@@ -842,7 +842,8 @@ export default abstract class Tokenizer extends CommentsParser {
       this.finishToken(tt.question);
     }
   }
-
+  // 根据code来匹配单词
+  // chatCode源码地址 https://github.com/xtuc/charcodes/blob/master/packages/charcodes/src/index.js
   getTokenFromCode(code: number): void {
     switch (code) {
       // The interpretation of a dot depends on whether it is followed
@@ -1033,7 +1034,7 @@ export default abstract class Tokenizer extends CommentsParser {
         return;
 
       default:
-        if (isIdentifierStart(code)) {
+        if (isIdentifierStart(code)) { // 如果可以作为标识符的第一个字符，就按照标识符的规则进行识别
           this.readWord(code);
           return;
         }
@@ -1447,12 +1448,13 @@ export default abstract class Tokenizer extends CommentsParser {
   // words when necessary.
 
   readWord(firstCode?: number): void {
-    const word = this.readWord1(firstCode);
-    const type = keywordTypes.get(word);
-    if (type !== undefined) {
+    const word = this.readWord1(firstCode); // 读取单词
+    const type = keywordTypes.get(word); 
+    if (type !== undefined) { // 是否为关键字
       // We don't use word as state.value here because word is a dynamic string
       // while token label is a shared constant string
-      this.finishToken(type, tokenLabelName(type));
+      // 如果是关键字
+      this.finishToken(type, tokenLabelName(type)); // 通常tokenLabelName(type)的返回值就是上面的word
     } else {
       this.finishToken(tt.name, word);
     }

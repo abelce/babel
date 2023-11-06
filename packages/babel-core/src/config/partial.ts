@@ -105,7 +105,7 @@ export default function* loadPrivatePartialConfig(
     caller,
     showConfig: showConfigPath === filename,
   };
-
+  // 获取config chain
   const configChain = yield* buildRootChain(args, context);
   if (!configChain) return null;
 

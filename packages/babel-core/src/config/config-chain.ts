@@ -46,7 +46,7 @@ export type ConfigChain = {
   plugins: Array<UnloadedDescriptor<PluginAPI>>;
   presets: Array<UnloadedDescriptor<PresetAPI>>;
   options: Array<ValidatedOptions>;
-  files: Set<string>;
+  files: Set<string>; // 保存所有配置文件的路径
 };
 
 export type PresetInstance = {
@@ -233,7 +233,8 @@ export function* buildRootChain(
 
       if (
         ignoreFile &&
-        shouldIgnore(context, ignoreFile.ignore, null, ignoreFile.dirname)
+        // 如果dirname再ignore中，标识该文件别忽略
+        shouldIgnore(context, ignoreFile.ignore, null, ignoreFile.dirname) 
       ) {
         isIgnored = true;
       }
@@ -251,6 +252,7 @@ export function* buildRootChain(
           isIgnored = true;
         } else {
           babelRcReport = yield* babelrcLogger.output();
+          // 合并.babelrc的配置
           mergeChain(fileChain, result);
         }
       }
@@ -278,6 +280,7 @@ export function* buildRootChain(
     programmaticChain,
   );
 
+  // isIgnored: 如果文件被忽略，则plugins、presets、options、fileHandling皆为空，不需要转换
   return {
     plugins: isIgnored ? [] : dedupDescriptors(chain.plugins),
     presets: isIgnored ? [] : dedupDescriptors(chain.presets),

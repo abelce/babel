@@ -210,6 +210,7 @@ export default abstract class StatementParser extends ExpressionParser {
   ): N.Program {
     program.sourceType = sourceType;
     program.interpreter = this.parseInterpreterDirective();
+    // 解析body部分
     this.parseBlockBody(program, true, true, end);
     if (
       this.inModule &&
@@ -1198,8 +1199,8 @@ export default abstract class StatementParser extends ExpressionParser {
     kind: "var" | "let" | "const" | "using" | "await using",
     allowMissingInitializer: boolean = false,
   ): N.VariableDeclaration {
-    this.next(); // 解析 var后面的关键字，比如 `const a = 1;` 中的`a`
-    this.parseVar(node, false, kind, allowMissingInitializer);
+    this.next(); // 解析 var/const后面的关键字，比如 `const a = 1;` 中的`a`
+    this.parseVar(node, false, kind, allowMissingInitializer); // 创建var的声明
     this.semicolon();
     return this.finishNode(node, "VariableDeclaration");
   }
@@ -1571,7 +1572,7 @@ export default abstract class StatementParser extends ExpressionParser {
     decl: Undone<N.VariableDeclarator>,
     kind: "var" | "let" | "const" | "using" | "await using",
   ): void {
-    const id = this.parseBindingAtom(); // 获取标识符
+    const id = this.parseBindingAtom(); // 获取标识符，同时去读取下一个token: =
     this.checkLVal(id, {
       in: { type: "VariableDeclarator" },
       binding: kind === "var" ? BindingFlag.TYPE_VAR : BindingFlag.TYPE_LEXICAL,
