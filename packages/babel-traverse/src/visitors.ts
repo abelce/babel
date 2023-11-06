@@ -133,7 +133,7 @@ export function explode<S>(visitor: Visitor<S>): ExplodedVisitor<S> {
     const fns = visitor[nodeType];
     // clear it from the visitor
     delete visitor[nodeType];
-
+   // 通过别名来设置nodeType
     for (const alias of aliases) {
       const existing = visitor[alias];
       if (existing) {
@@ -317,7 +317,7 @@ function wrapWithStateOrWrapper<State>(
 function ensureEntranceObjects(obj: Visitor) {
   for (const key of Object.keys(obj) as (keyof Visitor)[]) {
     if (shouldIgnoreKey(key)) continue;
-
+    // 如果visitor属性对应的key为function，就转化为 {enter: fns}的形式
     const fns = obj[key];
     if (typeof fns === "function") {
       // @ts-expect-error: Expression produces a union type that is too complex to represent.
@@ -325,7 +325,7 @@ function ensureEntranceObjects(obj: Visitor) {
     }
   }
 }
-
+// enter/exit转化为数组形式
 function ensureCallbackArrays(obj: Visitor) {
   if (obj.enter && !Array.isArray(obj.enter)) obj.enter = [obj.enter];
   if (obj.exit && !Array.isArray(obj.exit)) obj.exit = [obj.exit];
