@@ -95,7 +95,7 @@ function* transformFile(file: File, pluginPasses: PluginPasses): Handler<void> {
       // 收集plugin的visitor
       visitors.push(plugin.visitor);
     }
-    // 执行plugin.pre
+    // 执行plugin.pre，可以用来设置visitor执行的runtime
     for (const [plugin, pass] of passPairs) {
       const fn = plugin.pre;
       if (fn) {
