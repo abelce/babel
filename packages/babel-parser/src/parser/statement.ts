@@ -1201,7 +1201,7 @@ export default abstract class StatementParser extends ExpressionParser {
   ): N.VariableDeclaration {
     this.next(); // 解析 var/const后面的关键字，比如 `const a = 1;` 中的`a`
     this.parseVar(node, false, kind, allowMissingInitializer); // 创建var的声明
-    this.semicolon();
+    this.semicolon(); // 处理结尾的分号；
     return this.finishNode(node, "VariableDeclaration");
   }
 

@@ -220,7 +220,7 @@ export function findConfigUpwards(rootDir: string): string | null {
 
     const nextDir = path.dirname(dirname);
     if (dirname === nextDir) break;
-    dirname = nextDir;
+    dirname = nextDir; // 设置为上级目录
   }
 
   return null;
@@ -244,7 +244,7 @@ export function* findRelativeConfig(
         envName,
         caller,
         packageData.pkg?.dirname === loc
-          ? packageToBabelConfig(packageData.pkg)
+          ? packageToBabelConfig(packageData.pkg) // 从package.json中获取babel配置
           : null,
       );
     }

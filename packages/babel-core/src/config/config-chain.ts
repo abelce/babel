@@ -221,7 +221,7 @@ export function* buildRootChain(
       pkgData &&
       babelrcLoadEnabled(context, pkgData, babelrcRoots, babelrcRootsDirectory)
     ) {
-      ({ ignore: ignoreFile, config: babelrcFile } = yield* findRelativeConfig(
+      ({ ignore: ignoreFile, config: babelrcFile } = yield* findRelativeConfig( // 从文件所有位置找到packageData.directories目录下第一个.babelrc文件，
         pkgData,
         context.envName,
         context.caller,

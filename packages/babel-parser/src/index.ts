@@ -114,13 +114,17 @@ function getParserClass(pluginsFromOptions: PluginList): {
   );
 
   const key = pluginList.join("/");
+  // 从缓存中获取parser
   let cls = parserClassCache[key];
   if (!cls) {
     cls = Parser;
+    // 创建plugins中的Parser并缓存
+    // 通过多重继承的方式，将各个plugin中的Parser的方法融合到一个Parser上
     for (const plugin of pluginList) {
       // @ts-expect-error todo(flow->ts)
       cls = mixinPlugins[plugin](cls);
     }
+    // 通过plugin的key记性缓存
     parserClassCache[key] = cls;
   }
   return cls;

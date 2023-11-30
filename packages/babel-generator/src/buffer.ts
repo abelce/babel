@@ -88,7 +88,7 @@ export default class Buffer {
   ) {
     const cursor = this._queueCursor;
     if (cursor === this._queue.length) {
-      this._allocQueue();
+      this._allocQueue(); // 为新的item分配资源
     }
     const item = this._queue[cursor];
     item.char = char;

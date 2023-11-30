@@ -28,6 +28,7 @@ function resolveRootMode(rootDir: string, rootMode: RootMode): string {
       return rootDir;
 
     case "upward-optional": {
+      // 从上级目录中查找，如果找不到就回退到当前目录
       const upwardRootDir = findConfigUpwards(rootDir);
       return upwardRootDir === null ? rootDir : upwardRootDir;
     }
