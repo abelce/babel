@@ -268,7 +268,7 @@ export default abstract class Tokenizer extends CommentsParser {
       this.finishToken(tt.eof);
       return;
     }
-
+    // jsx的parser对getTokenFromCode做了一次包装
     this.getTokenFromCode(this.codePointAtPos(this.state.pos));
   }
 

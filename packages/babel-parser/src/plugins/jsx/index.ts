@@ -101,12 +101,12 @@ export default (superClass: typeof Parser) =>
         const ch = this.input.charCodeAt(this.state.pos);
 
         switch (ch) {
-          case charCodes.lessThan:
-          case charCodes.leftCurlyBrace:
+          case charCodes.lessThan: // <
+          case charCodes.leftCurlyBrace: // {
             if (this.state.pos === this.state.start) {
               if (ch === charCodes.lessThan && this.state.canStartJSXElement) {
                 ++this.state.pos;
-                this.finishToken(tt.jsxTagStart);
+                this.finishToken(tt.jsxTagStart); // 
               } else {
                 super.getTokenFromCode(ch);
               }
@@ -116,14 +116,14 @@ export default (superClass: typeof Parser) =>
             this.finishToken(tt.jsxText, out);
             return;
 
-          case charCodes.ampersand:
+          case charCodes.ampersand: // &
             out += this.input.slice(chunkStart, this.state.pos);
             out += this.jsxReadEntity();
             chunkStart = this.state.pos;
             break;
 
-          case charCodes.greaterThan:
-          case charCodes.rightCurlyBrace:
+          case charCodes.greaterThan: // > 
+          case charCodes.rightCurlyBrace: // }
             if (process.env.BABEL_8_BREAKING) {
               this.raise(JsxErrors.UnexpectedToken, {
                 at: this.state.curPosition(),
@@ -177,7 +177,7 @@ export default (superClass: typeof Parser) =>
 
         const ch = this.input.charCodeAt(this.state.pos);
         if (ch === quote) break;
-        if (ch === charCodes.ampersand) {
+        if (ch === charCodes.ampersand) { // ch === '&'
           out += this.input.slice(chunkStart, this.state.pos);
           out += this.jsxReadEntity();
           chunkStart = this.state.pos;
@@ -195,11 +195,11 @@ export default (superClass: typeof Parser) =>
 
     jsxReadEntity(): string {
       const startPos = ++this.state.pos;
-      if (this.codePointAtPos(this.state.pos) === charCodes.numberSign) {
+      if (this.codePointAtPos(this.state.pos) === charCodes.numberSign) { // === '#'
         ++this.state.pos;
 
         let radix = 10;
-        if (this.codePointAtPos(this.state.pos) === charCodes.lowercaseX) {
+        if (this.codePointAtPos(this.state.pos) === charCodes.lowercaseX) { // === 'x'
           radix = 16;
           ++this.state.pos;
         }
@@ -583,18 +583,20 @@ export default (superClass: typeof Parser) =>
     getTokenFromCode(code: number): void {
       const context = this.curContext();
 
-      if (context === tc.j_expr) {
+      if (context === tc.j_expr) { // express
         this.jsxReadToken();
         return;
       }
 
       if (context === tc.j_oTag || context === tc.j_cTag) {
         if (isIdentifierStart(code)) {
+          // 标签名
           this.jsxReadWord();
           return;
         }
 
         if (code === charCodes.greaterThan) {
+          // 标签关闭<div>或者</div>
           ++this.state.pos;
           this.finishToken(tt.jsxTagEnd);
           return;
@@ -612,8 +614,9 @@ export default (superClass: typeof Parser) =>
       if (
         code === charCodes.lessThan &&
         this.state.canStartJSXElement &&
-        this.input.charCodeAt(this.state.pos + 1) !== charCodes.exclamationMark
+        this.input.charCodeAt(this.state.pos + 1) !== charCodes.exclamationMark // 感叹号
       ) {
+        // 开始标签
         ++this.state.pos;
         this.finishToken(tt.jsxTagStart);
         return;
@@ -624,15 +627,15 @@ export default (superClass: typeof Parser) =>
 
     updateContext(prevType: TokenType): void {
       const { context, type } = this.state;
-      if (type === tt.slash && prevType === tt.jsxTagStart) {
+      if (type === tt.slash && prevType === tt.jsxTagStart) { // <div/>  这种标签
         // do not consider JSX expr -> JSX open tag -> ... anymore
         // reconsider as closing tag context
         context.splice(-2, 2, tc.j_cTag);
         this.state.canStartJSXElement = false;
-      } else if (type === tt.jsxTagStart) {
+      } else if (type === tt.jsxTagStart) { // <div></div> 模式，开始标签
         // start opening tag context
         context.push(tc.j_oTag);
-      } else if (type === tt.jsxTagEnd) {
+      } else if (type === tt.jsxTagEnd) { // 结束标签
         const out = context[context.length - 1];
         if ((out === tc.j_oTag && prevType === tt.slash) || out === tc.j_cTag) {
           context.pop();
