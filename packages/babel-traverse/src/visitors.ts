@@ -74,9 +74,11 @@ export function explode<S>(visitor: Visitor<S>): ExplodedVisitor<S> {
   delete visitor.__esModule;
 
   // ensure visitors are objects
+  // 将非指定的key/func ({key: func})的结构格式化为 {key: {enter: func}}的形式
   ensureEntranceObjects(visitor);
 
   // ensure enter/exit callbacks are arrays
+  // enter/exit的值格式化为数组
   ensureCallbackArrays(visitor);
 
   // add type wrappers
@@ -100,6 +102,7 @@ export function explode<S>(visitor: Visitor<S>): ExplodedVisitor<S> {
       for (const type of types) {
         // merge the visitor if necessary or just put it back in
         if (visitor[type]) {
+          // 合并enter/exit勾子
           mergePair(visitor[type], fns);
         } else {
           // @ts-expect-error Expression produces too complex union
@@ -148,6 +151,7 @@ export function explode<S>(visitor: Visitor<S>): ExplodedVisitor<S> {
   for (const nodeType of Object.keys(visitor)) {
     if (shouldIgnoreKey(nodeType)) continue;
 
+    // 确定enter/exit是数组
     ensureCallbackArrays(
       // @ts-expect-error nodeType must present in visitor after previous validations
       visitor[nodeType],
@@ -172,6 +176,7 @@ export function verify(visitor: Visitor) {
 
   for (const nodeType of Object.keys(visitor) as (keyof Visitor)[]) {
     if (nodeType === "enter" || nodeType === "exit") {
+      // 校验value为function
       validateVisitorMethods(nodeType, visitor[nodeType]);
     }
 
@@ -330,7 +335,7 @@ function ensureCallbackArrays(obj: Visitor) {
   if (obj.enter && !Array.isArray(obj.enter)) obj.enter = [obj.enter];
   if (obj.exit && !Array.isArray(obj.exit)) obj.exit = [obj.exit];
 }
-
+// 对fn包装一次，添加校验和toString方法
 function wrapCheck(nodeType: VIRTUAL_TYPES, fn: Function) {
   const fnKey = `is${nodeType}`;
   // @ts-expect-error we know virtualTypesValidators will contain `fnKey`, but TS doesn't

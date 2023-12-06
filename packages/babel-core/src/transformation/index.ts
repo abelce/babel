@@ -90,14 +90,14 @@ function* transformFile(file: File, pluginPasses: PluginPasses): Handler<void> {
     for (const plugin of pluginPairs.concat([loadBlockHoistPlugin()])) {
       const pass = new PluginPass(file, plugin.key, plugin.options);
 
-      passPairs.push([plugin, pass]);
-      passes.push(pass);
+      passPairs.push([plugin, pass]); // plugin/pass键值对
+      passes.push(pass); // pass列表
       // 收集plugin的visitor
       visitors.push(plugin.visitor);
     }
     // 执行plugin.pre，可以用来设置visitor执行的runtime
     for (const [plugin, pass] of passPairs) {
-      const fn = plugin.pre;
+      const fn = plugin.pre; //  执行 pre
       if (fn) {
         // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
         const result = fn.call(pass, file);

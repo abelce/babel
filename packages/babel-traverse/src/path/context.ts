@@ -13,6 +13,7 @@ export function call(this: NodePath, key: VisitPhase): boolean {
   this.debug(key);
 
   if (this.node) {
+    // 真正调用vistor
     if (this._call(opts[key])) return true;
   }
 
@@ -46,6 +47,7 @@ export function _call(this: NodePath, fns?: Array<Function>): boolean {
     }
 
     // node has been replaced, it will have been requeued
+    // 如果node被替换了，那么久重新入队列
     if (this.node !== node) return true;
 
     // this.shouldSkip || this.shouldStop || this.removed
@@ -92,7 +94,7 @@ export function visit(this: NodePath): boolean {
   // a requeued node (e.g. by .replaceWith()) that is then marked
   // with .skip().
   // 调用enter
-  if (this.shouldSkip || this.call("enter")) {
+  if (this.shouldSkip || this.call("enter")) { // 调用
     this.debug("Skip...");
     return this.shouldStop;
   }

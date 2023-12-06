@@ -104,7 +104,7 @@ export default function* normalizeFile(
   return new File(options, {
     code,
     ast: ast as t.File,
-    inputMap,
+    inputMap, // sourceMap
   });
 }
 

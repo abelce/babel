@@ -19,14 +19,14 @@ import { VISITOR_KEYS } from "@babel/types";
  */
 export function traverseNode<S = unknown>(
   node: t.Node,
-  opts: ExplodedTraverseOptions<S>,
+  opts: ExplodedTraverseOptions<S>, // visitor
   scope?: Scope,
   state?: any,
   path?: NodePath,
   skipKeys?: Record<string, boolean>,
   visitSelf?: boolean,
 ): boolean {
-  const keys = VISITOR_KEYS[node.type]; // 获取不同节点不同的key
+  const keys = VISITOR_KEYS[node.type]; // 获取不同节点不同的key，其实即使visitors列表
   if (!keys) return false;
 
   const context = new TraversalContext(scope, opts, state, path);

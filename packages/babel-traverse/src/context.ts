@@ -35,7 +35,7 @@ export default class TraversalContext<S = unknown> {
     if (opts.enter || opts.exit) return true;
 
     // check if we have a visitor for this node
-    if (opts[node.type]) return true;
+    if (opts[node.type]) return true; // 根据节点类型判断
 
     // check if we're going to traverse into this node
     const keys: Array<string> | undefined = VISITOR_KEYS[node.type];
